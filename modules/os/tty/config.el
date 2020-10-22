@@ -6,8 +6,13 @@
 ;; `visible-cursor' prevents this.
 (setq visible-cursor nil)
 
-;; Enable the mouse in terminal Emacs
+;; Enable mouse clicks in terminal Emacs
 (add-hook 'tty-setup-hook #'xterm-mouse-mode)
+
+;; Enable mouse scrolling in terminal Emacs
+(map! :unless (display-graphic-p)
+      :nvi "<mouse-4>" (cmd! (scroll-down 1))
+      :nvi "<mouse-5>" (cmd! (scroll-up 1)))
 
 ;; Windows terminals don't support what I'm about to do.
 (add-hook! 'tty-setup-hook
@@ -24,11 +29,11 @@
       (and (require 'xclip nil t)
            (xclip-mode +1)))))
 
-  (when (featurep! :editor evil)
-    ;; Fix cursor shape-changing in the terminal. Only supported in XTerm, Gnome
-    ;; Terminal, iTerm, Konsole, dumb (etc. mintty), and Apple Terminal.app. If
-    ;; using Apple Terminal.app, install
-    ;; http://www.culater.net/software/SIMBL/SIMBL.php and
-    ;; https://github.com/saitoha/mouseterm-plus/releases. That makes to support
-    ;; VT's DECSCUSR sequence.
-    (add-hook 'tty-setup-hook #'evil-terminal-cursor-changer-activate))
+(when (featurep! :editor evil)
+  ;; Fix cursor shape-changing in the terminal. Only supported in XTerm, Gnome
+  ;; Terminal, iTerm, Konsole, dumb (etc. mintty), and Apple Terminal.app. If
+  ;; using Apple Terminal.app, install
+  ;; http://www.culater.net/software/SIMBL/SIMBL.php and
+  ;; https://github.com/saitoha/mouseterm-plus/releases. That makes to support
+  ;; VT's DECSCUSR sequence.
+  (add-hook 'tty-setup-hook #'evil-terminal-cursor-changer-activate))
